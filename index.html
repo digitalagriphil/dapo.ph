@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<title>DAPO — Digital Agri Philippines OPC</title>
+
+<!-- Google Fonts: Fraunces (display) + Public Sans (body/UI) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* ===== Color tokens ===== */
+    --forest:        #16281F;   /* deep forest green — primary dark */
+    --forest-2:      #21402E;   /* secondary panel green */
+    --gold:          #C9A244;   /* harvest gold accent */
+    --gold-light:    #E7CE87;   /* pale gold for hover/highlights */
+    --cream:         #F6F1E3;   /* warm cream text / light surfaces */
+    --soil:          #2A1D14;   /* dark soil brown — footer/contact */
+    --ink:           #14201A;   /* near-black green for readable body copy */
+
+    /* ===== Type tokens ===== */
+    --font-display: "Fraunces", "Playfair Display", serif;
+    --font-body:    "Public Sans", -apple-system, sans-serif;
+
+    /* vmin = smaller of width/height, so type shrinks correctly on
+       short landscape screens AND narrow portrait screens alike */
+    --h1: clamp(1.8rem, 7.2vmin, 4.6rem);
+    --h2: clamp(1.35rem, 5vmin, 2.7rem);
+    --h3: clamp(1rem, 3vmin, 1.4rem);
+    --body: clamp(0.82rem, 2.1vmin, 1.05rem);
+    --eyebrow: clamp(0.62rem, 1.5vmin, 0.8rem);
+  }
+
+  *{ box-sizing: border-box; }
+  p{ margin: 0; } /* spacing is controlled by flex gap, not UA margins, so heights stay predictable */
+
+  html{
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body{
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--cream);
+    background: var(--forest);
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: none;
+  }
+
+  h1, h2, h3{
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  h1{ font-size: var(--h1); line-height: 1.05; }
+  h2{ font-size: var(--h2); line-height: 1.1; margin-bottom: 0.6em; }
+  h3{ font-size: var(--h3); font-weight: 500; }
+
+  p, .body-text, li{
+    font-family: var(--font-body);
+    font-size: var(--body);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    font-size: var(--eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.9rem;
+    display: inline-block;
+  }
+
+  section{
+    height: 100vh;   /* fallback for browsers without svh/dvh */
+    height: 100svh;  /* smallest possible mobile viewport (chrome visible) */
+    height: 100dvh;  /* adjusts live as mobile browser chrome shows/hides */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding: clamp(1rem, 4.5vmin, 3.5rem) clamp(1rem, 5vmin, 2.5rem);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+  }
+
+  /* Readable overlay for every photo-backed section */
+  .bg{
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 0;
+  }
+  .bg::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20,32,26,.72) 0%, rgba(20,32,26,.55) 45%, rgba(20,32,26,.82) 100%);
+  }
+  .content{
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.4rem, 1.8vmin, 1.1rem);
+  }
+
+  #section1 .bg{ background-image: url(background1.jpg); }
+  #section2 .bg{ background-image: url(background2.jpg); }
+  #section3 .bg{ background-image: url(background1.jpg); }
+  #section4 .bg{ background-image: url(background4.jpeg); }
+  #section5 .bg{ background-image: url(background5.jpeg); }
+  #section6 .bg{ background-image: url(background6.jpeg); }
+  #section7 .bg{ background-image: url(background1.jpg); }
+  #section7 .bg::after{ background: linear-gradient(180deg, rgba(42,29,20,.80) 0%, rgba(42,29,20,.72) 45%, rgba(42,29,20,.92) 100%); }
+
+  /* ===== Hero ===== */
+  #section1 h1{ color: var(--cream); }
+  #section1 h2{
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: clamp(0.85rem, 3vmin, 1.35rem);
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    margin-top: 0.4rem;
+  }
+
+  /* ===== Solutions & Why-choose grids ===== */
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: clamp(0.6rem, 2vmin, 1.4rem);
+    max-width: 880px;
+    margin-top: clamp(0.3rem, 1.5vmin, 1rem);
+    text-align: left;
+  }
+  .card{
+    background: rgba(246, 241, 227, 0.07);
+    border: 1px solid rgba(231, 206, 135, 0.25);
+    border-radius: 14px;
+    padding: clamp(0.65rem, 2.4vmin, 1.4rem) clamp(0.8rem, 2.2vmin, 1.5rem);
+    backdrop-filter: blur(2px);
+  }
+  .card .icon{ font-size: clamp(1.1rem, 3vmin, 1.6rem); display:block; margin-bottom: .4em; }
+  .card h3{ color: var(--gold-light); margin-bottom: .3em; }
+  .card p{ margin: 0; opacity: .92; }
+
+  .check-list{
+    list-style: none;
+    padding: 0;
+    margin: clamp(0.4rem, 1.5vmin, 1rem) 0 0;
+    display: grid;
+    gap: clamp(0.4rem, 1.6vmin, 0.85rem);
+    text-align: left;
+    max-width: 620px;
+  }
+  .check-list li{
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+  }
+  .check-list li::before{
+    content: "✓";
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+    background: rgba(201,162,68,0.15);
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+  }
+
+  /* ===== Vision & Mission ===== */
+  .vm-block{
+    margin-top: clamp(0.4rem, 2vmin, 1.2rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.2rem, 1vmin, 0.5rem);
+  }
+  .vm-block h3{ color: var(--gold-light); }
+  .vm-block p{ max-width: 620px; }
+
+  /* ===== Contact section ===== */
+  #section7 h2{ color: var(--cream); }
+
+  .dashboard-link{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.4rem, 1.5vmin, 0.8rem);
+    text-decoration: none;
+    margin-bottom: clamp(0.6rem, 2.5vmin, 2.2rem);
+    outline-offset: 6px;
+  }
+  .dashboard-icon{
+    width: clamp(52px, 11vmin, 92px);
+    height: clamp(52px, 11vmin, 92px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 26px rgba(201,162,68,0.45), inset 0 0 0 4px rgba(255,255,255,0.15);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .dashboard-icon svg{ width: 52%; height: 52%; }
+  .dashboard-link:hover .dashboard-icon,
+  .dashboard-link:focus-visible .dashboard-icon{
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 14px 34px rgba(201,162,68,0.6), inset 0 0 0 4px rgba(255,255,255,0.25);
+  }
+  .dashboard-label{
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(0.66rem, 1.7vmin, 0.82rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    transition: color .2s ease;
+  }
+  .dashboard-link:hover .dashboard-label,
+  .dashboard-link:focus-visible .dashboard-label{ color: var(--cream); }
+
+  .contact-details{
+    display: grid;
+    gap: clamp(0.3rem, 1.2vmin, 0.6rem);
+    margin: 0 0 clamp(0.6rem, 2vmin, 1.6rem);
+  }
+  .contact-details p{ margin: 0; opacity: .95; }
+
+  .closing-line{ max-width: 560px; opacity: .95; }
+  .copyright{ font-size: clamp(0.65rem, 1.6vmin, 0.8rem); opacity: .6; margin-top: clamp(0.6rem, 2.5vmin, 2.2rem); }
+
+  /* ===== Scroll indicator ===== */
+  .scroll-down{
+    position: absolute;
+    bottom: clamp(10px, 3vmin, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(1.1rem, 3vmin, 1.6rem);
+    color: var(--gold-light);
+    cursor: pointer;
+    animation: bounce 1.6s infinite;
+    z-index: 2;
+    opacity: .85;
+  }
+  .scroll-down:hover{ color: var(--cream); opacity: 1; }
+
+  @keyframes bounce{
+    0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+    40% { transform: translate(-50%, 8px); }
+    60% { transform: translate(-50%, 4px); }
+  }
+
+  /* ===== Side progress dots ===== */
+  .dots{
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10;
+  }
+  .dots a{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(246,241,227,0.35);
+    display: block;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .dots a:hover, .dots a.active{
+    background: var(--gold);
+    transform: scale(1.25);
+  }
+
+  @media (max-width: 480px){
+    /* Very narrow phones: single column reads better than two tiny ones */
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 720px){
+    .dots{ display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    .scroll-down{ animation: none; }
+    .dashboard-icon{ transition: none; }
+  }
+
+  :focus-visible{ outline: 2px solid var(--gold-light); outline-offset: 3px; }
+</style>
+</head>
+
+<body>
+
+  <!-- Side scroll-progress dots -->
+  <nav class="dots" aria-label="Section navigation">
+    <a href="#section1" aria-label="Home"></a>
+    <a href="#section2" aria-label="About"></a>
+    <a href="#section3" aria-label="Solutions"></a>
+    <a href="#section4" aria-label="Vision and Mission"></a>
+    <a href="#section5" aria-label="Why DAPO"></a>
+    <a href="#section6" aria-label="Our Goals"></a>
+    <a href="#section7" aria-label="Contact"></a>
+  </nav>
+
+  <!-- SECTION 1: Hero -->
+  <section id="section1">
+    <div class="bg"></div>
+    <div class="content">
+      <h1>DAPO</h1>
+      <h2>Digital Agri Philippines OPC</h2>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section2')">▼</div>
+  </section>
+
+  <!-- SECTION 2: About -->
+  <section id="section2">
+    <div class="bg"></div>
+    <div class="content">
+      <span class="eyebrow">About DAPO</span>
+      <h2>Digitalizing Philippine Agriculture</h2>
+      <p class="body-text">
+        DAPO (Digital Agri Philippines OPC) is a technology-driven startup dedicated to
+        modernizing the Philippine agriculture sector. Our mission is to digitalize the
+        entire value chain — from production and farm management to distribution and
+        market access.
+      </p>
+      <p class="body-text">
+        We aim to empower farmers, livestock producers, and agri-entrepreneurs by providing
+        innovative digital tools that improve efficiency, transparency, and profitability.
+        By bridging the gap between traditional farming and modern technology, DAPO helps
+        build a more resilient and sustainable agricultural ecosystem in the Philippines.
+      </p>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section3')">▼</div>
+  </section>
+
+  <!-- SECTION 3: Our Solutions -->
+  <section id="section3">
+    <div class="bg"></div>
+    <div class="content" style="max-width:900px;">
+      <span class="eyebrow">What We Offer</span>
+      <h2>Our Solutions</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="icon">🐄</span>
+          <h3>Livestock Digital Tracking</h3>
+          <p>Monitor livestock health, breeding, and movement using real-time data to improve productivity.</p>
+        </div>
+        <div class="card">
+          <span class="icon">🌱</span>
+          <h3>Farm Management System</h3>
+          <p>Digitally manage crops, feeds, inventory, and operations with smart dashboards.</p>
+        </div>
+        <div class="card">
+          <span class="icon">🚜</span>
+          <h3>Market Linkage Platform</h3>
+          <p>Connect farmers directly to buyers and suppliers for better income opportunities.</p>
+        </div>
+        <div class="card">
+          <span class="icon">📦</span>
+          <h3>Supply Chain Integration</h3>
+          <p>Ensure efficient, transparent, and traceable farm-to-market processes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section4')">▼</div>
+  </section>
+
+  <!-- SECTION 4: Vision & Mission -->
+  <section id="section4">
+    <div class="bg"></div>
+    <div class="content">
+      <span class="eyebrow">Vision &amp; Mission</span>
+      <h2>What Drives Us</h2>
+      <div class="vm-block">
+        <h3>Vision</h3>
+        <p>To become the leading digital platform transforming agriculture and livestock industries in the Philippines.</p>
+      </div>
+      <div class="vm-block">
+        <h3>Mission</h3>
+        <p>To empower Filipino farmers and agri-businesses through innovative technology, enabling a more efficient and sustainable ecosystem.</p>
+      </div>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section5')">▼</div>
+  </section>
+
+  <!-- SECTION 5: Why Choose DAPO -->
+  <section id="section5">
+    <div class="bg"></div>
+    <div class="content">
+      <span class="eyebrow">The DAPO Difference</span>
+      <h2>Why Choose DAPO?</h2>
+      <ul class="check-list">
+        <li>Designed for Filipino farmers and agribusinesses</li>
+        <li>Focused on livestock and agriculture value chains</li>
+        <li>Easy-to-use digital tools</li>
+        <li>Data-driven decision making</li>
+        <li>Promotes sustainability and food security</li>
+      </ul>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section6')">▼</div>
+  </section>
+
+  <!-- SECTION 6: Our Goals -->
+  <section id="section6">
+    <div class="bg"></div>
+    <div class="content">
+      <span class="eyebrow">Looking Ahead</span>
+      <h2>Our Goals</h2>
+      <p class="body-text">
+        DAPO envisions a future where every farmer in the Philippines has access to digital
+        tools that enhance productivity and profitability. We aim to expand our platform
+        nationwide, integrate emerging technologies, and support initiatives that
+        strengthen food security.
+      </p>
+    </div>
+    <div class="scroll-down" onclick="scrollToSection('section7')">▼</div>
+  </section>
+
+  <!-- SECTION 7: Contact -->
+  <section id="section7">
+    <div class="bg"></div>
+    <div class="content">
+
+      <!-- DAPO DASHBOARD — sits at the top of the Contact section -->
+      <a
+        href="https://glocalinnovationtech.github.io/digitalagri.ph/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="dashboard-link"
+        aria-label="Open DAPO Dashboard in a new tab"
+      >
+        <div class="dashboard-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2C12 2 7 6.5 7 11.5C7 14.5376 9.46243 17 12.5 17C13.2094 17 13.8863 16.8656 14.5 16.6207C14.1954 18.6919 12.7639 20.4108 10.8047 21.1963C10.5285 21.3068 10.5983 21.7157 10.8927 21.7297C11.2588 21.7473 11.6279 21.75 12 21.75C17.1086 21.75 21.25 17.6086 21.25 12.5C21.25 9.5 19.5 6.5 17.5 4.5C17.5 4.5 17.8 7 16.5 8.5C16.5 8.5 16.5 5 14.5 3C13.7 2.2 12.6 2 12 2Z" stroke="#16281F" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M7 11.5C7 11.5 4 13 4 16.5C4 19.2614 6.23858 21.5 9 21.5" stroke="#16281F" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="dashboard-label">DAPO Dashboard</span>
+      </a>
+
+      <span class="eyebrow">Get In Touch</span>
+      <h2>Our Contact</h2>
+
+      <div class="contact-details">
+        <p>📧 digitalagriphil@gmail.com</p>
+        <p>📱 +63 995 357 5939</p>
+        <p>📍 Metro Manila, Philippines</p>
+      </div>
+
+      <p class="closing-line">
+        Let's work together to transform and build a smarter future for Philippine
+        Agriculture through innovation. 🌾
+      </p>
+
+      <p class="copyright">© 2026 DAPO – Digital Agri Philippines OPC</p>
+    </div>
+  </section>
+
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Highlight active dot on scroll
+    const sections = document.querySelectorAll("section[id]");
+    const dots = document.querySelectorAll(".dots a");
+    const dotMap = {};
+    dots.forEach(d => dotMap[d.getAttribute("href").slice(1)] = d);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          dots.forEach(d => d.classList.remove("active"));
+          const active = dotMap[entry.target.id];
+          if (active) active.classList.add("active");
+        }
+      });
+    }, { threshold: 0.6 });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
