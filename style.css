@@ -91,6 +91,8 @@ section{
   background-repeat: no-repeat;
   background-position: center;
   z-index: 0;
+  /* unifies photos from different sources into one consistent, richer look */
+  filter: saturate(1.12) contrast(1.08) brightness(0.97);
 }
 .bg::after{
   content: "";
@@ -111,13 +113,13 @@ section{
 }
 .content.wide{ max-width: 1000px; width: 100%; }
 
-#section1 .bg{ background-image: url(background1.jpg); }
-#section2 .bg{ background-image: url(background2.jpg); }
-#section3 .bg{ background-image: url(background1.jpg); }
-#section5 .bg{ background-image: url(background4.jpeg); }
-#section6 .bg{ background-image: url(background5.jpeg); }
-#section7 .bg{ background-image: url(background6.jpeg); }
-#section8 .bg{ background-image: url(background1.jpg); }
+#section1 .bg{ background-image: url(images/background1.jpg); }
+#section2 .bg{ background-image: url(images/background2.jpg); }
+#section3 .bg{ background-image: url(images/background1.jpg); }
+#section5 .bg{ background-image: url(images/background4.jpeg); }
+#section6 .bg{ background-image: url(images/background5.jpeg); }
+#section7 .bg{ background-image: url(images/background6.jpeg); }
+#section8 .bg{ background-image: url(images/background1.jpg); }
 #section8 .bg::after{ background: linear-gradient(180deg, rgba(42,29,20,.80) 0%, rgba(42,29,20,.72) 45%, rgba(42,29,20,.92) 100%); }
 #section4{ background: var(--forest); } /* innovations gallery — solid, images provide the visual interest */
 
@@ -130,6 +132,65 @@ section{
   color: var(--gold-light);
   letter-spacing: 0.04em;
   margin-top: 0.4rem;
+}
+
+.hero-tagline{
+  max-width: 480px;
+  font-size: clamp(0.78rem, 2vmin, 1rem);
+  color: var(--cream);
+  opacity: .88;
+  margin-top: 0.2rem;
+}
+
+.btn-cta{
+  margin-top: clamp(0.6rem, 2vmin, 1.3rem);
+  padding: clamp(0.55rem, 1.8vmin, 0.9rem) clamp(1.3rem, 3.5vmin, 2rem);
+  border-radius: 999px;
+  border: 1.5px solid var(--gold-light);
+  background: transparent;
+  color: var(--gold-light);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(0.75rem, 1.9vmin, 0.95rem);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.btn-cta:hover, .btn-cta:focus-visible{
+  background: var(--gold);
+  color: var(--forest);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(201,162,68,0.4);
+}
+
+/* ===== Floating decorative leaves (purely ambient — never overlaps readable text) ===== */
+.decor{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.decor-leaf{
+  position: absolute;
+  width: clamp(28px, 6vmin, 60px);
+  height: clamp(28px, 6vmin, 60px);
+  color: var(--gold-light);
+  opacity: 0.16;
+  animation: drift 9s ease-in-out infinite;
+}
+.leaf-1{ top: 12%;  left: 8%;  animation-delay: 0s; }
+.leaf-2{ top: 68%;  left: 12%; animation-delay: 1.5s; animation-duration: 11s; }
+.leaf-3{ top: 20%;  right: 10%; animation-delay: 3s;  animation-duration: 10s; }
+.leaf-4{ top: 72%;  right: 8%;  animation-delay: 4.5s; animation-duration: 8s; }
+
+@keyframes drift{
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-18px) rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .decor-leaf{ animation: none; }
 }
 
 /* ===== Solutions & Why-choose grids ===== */
