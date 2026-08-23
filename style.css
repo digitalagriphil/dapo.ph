@@ -84,7 +84,7 @@ section{
   overflow: hidden;
 }
 
-/* Light, airy overlay — photos stay visible but softened so dark-green text reads cleanly */
+/* Gentle vignette only — photos stay clearly visible; legibility now comes from the card behind the text (see .content) */
 .bg{
   position: absolute;
   inset: 0;
@@ -92,13 +92,13 @@ section{
   background-repeat: no-repeat;
   background-position: center;
   z-index: 0;
-  filter: saturate(1.05) contrast(1.03) brightness(1.02);
+  filter: saturate(1.08) contrast(1.05);
 }
 .bg::after{
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,.90) 0%, rgba(255,255,255,.78) 45%, rgba(255,255,255,.92) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.10) 45%, rgba(255,255,255,.38) 100%);
 }
 .content{
   position: relative;
@@ -111,6 +111,17 @@ section{
   justify-content: center;
   gap: clamp(0.4rem, 1.8vmin, 1.1rem);
 }
+/* Frosted card behind the text so it reads clearly over any photo, on any screen —
+   excluded on .wide (Our Innovations sits on a plain white section, no card needed) */
+.content:not(.wide){
+  background: rgba(255,255,255,0.86);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(31,94,60,0.10);
+  border-radius: clamp(14px, 2.5vmin, 26px);
+  padding: clamp(1.1rem, 4vmin, 2.6rem) clamp(1.3rem, 4.5vmin, 3rem);
+  box-shadow: 0 18px 44px rgba(23,48,31,0.14);
+}
 .content.wide{ max-width: 1000px; width: 100%; }
 
 #section1 .bg{ background-image: url(background1.jpg); }
@@ -120,7 +131,7 @@ section{
 #section6 .bg{ background-image: url(background5.jpeg); }
 #section7 .bg{ background-image: url(background6.jpeg); }
 #section8 .bg{ background-image: url(background1.jpg); }
-#section8 .bg::after{ background: linear-gradient(180deg, rgba(238,245,236,.92) 0%, rgba(238,245,236,.84) 45%, rgba(238,245,236,.95) 100%); }
+#section8 .bg::after{ background: linear-gradient(180deg, rgba(238,245,236,.32) 0%, rgba(238,245,236,.12) 45%, rgba(238,245,236,.42) 100%); }
 #section4{ background: var(--surface); }
 
 /* ===== Hero ===== */
