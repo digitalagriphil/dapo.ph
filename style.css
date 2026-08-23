@@ -113,13 +113,13 @@ section{
 }
 .content.wide{ max-width: 1000px; width: 100%; }
 
-#section1 .bg{ background-image: url(images/background1.jpg); }
-#section2 .bg{ background-image: url(images/background2.jpg); }
-#section3 .bg{ background-image: url(images/background1.jpg); }
-#section5 .bg{ background-image: url(images/background4.jpeg); }
-#section6 .bg{ background-image: url(images/background5.jpeg); }
-#section7 .bg{ background-image: url(images/background6.jpeg); }
-#section8 .bg{ background-image: url(images/background1.jpg); }
+#section1 .bg{ background-image: url(background1.jpg); }
+#section2 .bg{ background-image: url(background2.jpg); }
+#section3 .bg{ background-image: url(background1.jpg); }
+#section5 .bg{ background-image: url(background4.jpeg); }
+#section6 .bg{ background-image: url(background5.jpeg); }
+#section7 .bg{ background-image: url(background6.jpeg); }
+#section8 .bg{ background-image: url(background1.jpg); }
 #section8 .bg::after{ background: linear-gradient(180deg, rgba(42,29,20,.80) 0%, rgba(42,29,20,.72) 45%, rgba(42,29,20,.92) 100%); }
 #section4{ background: var(--forest); } /* innovations gallery — solid, images provide the visual interest */
 
